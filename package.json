@@ -1,0 +1,14 @@
+{
+  "name": "github-repo-size",
+  "version": "1.0.0",
+  "description": "Firefox addon to add repository size to their Github homepage",
+  "main": "index.js",
+  "scripts": {
+    "test": "standard"
+  },
+  "author": "Matthieu Harlé",
+  "license": "MIT",
+  "devDependencies": {
+    "standard": "^10.0.3"
+  }
+}
