@@ -86,6 +86,7 @@ const injectRepoSize = () => {
 const createSizeElement = (repoSizeHuman) => {
   const li = document.createElement('li')
   li.id = REPO_SIZE_ID
+  li.setAttribute('title', 'As reported by the GitHub API, it mays differ from the actual repository size.')
   const elt = document.createElement('a')
   const icon = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
   icon.className = 'octicon octicon-database'
