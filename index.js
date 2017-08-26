@@ -110,4 +110,7 @@ const createSizeElement = (repoSizeHuman) => {
   return li
 }
 
+// Update to each ajax event
+document.addEventListener('pjax:end', injectRepoSize, false)
+
 injectRepoSize()
