@@ -19,7 +19,7 @@
   "content_scripts": [
     {
       "matches": ["*://github.com/*"],
-      "js": ["index.js"]
+      "js": ["src/index.js"]
     }
   ],
   "permissions": [

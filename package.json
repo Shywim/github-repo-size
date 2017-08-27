@@ -2,13 +2,23 @@
   "name": "github-repo-size",
   "version": "1.1.0",
   "description": "Firefox addon to add repository size to their Github homepage",
-  "main": "index.js",
+  "main": "src/index.js",
   "scripts": {
+    "build": "gulp webext",
+    "build-webext": "gulp webext",
+    "clean": "gulp clean",
     "test": "standard"
   },
   "author": "Matthieu Harlé",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Shywim/github-repo-size.git"
+  },
   "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-concat": "^2.6.1",
+    "gulp-zip": "^4.0.0",
     "standard": "^10.0.3"
   }
 }
