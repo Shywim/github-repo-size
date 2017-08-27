@@ -4,8 +4,9 @@
   "description": "Firefox addon to add repository size to their Github homepage",
   "main": "src/index.js",
   "scripts": {
-    "build": "gulp webext",
+    "build": "gulp build-all",
     "build-webext": "gulp webext",
+    "build-userscript": "gulp userscript",
     "clean": "gulp clean",
     "test": "standard"
   },
