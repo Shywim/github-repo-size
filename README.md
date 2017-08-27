@@ -14,7 +14,7 @@ Add repository size to the Github's summary.
 ## Usage
 
 Download the addon from **[addons.mozilla.org][amo]** or, if you prefer, you can download this project as a userscript on **[OpenUserJs][openjs]** (also available on the [GitHub releases page][ghreleases]).
-*⚠ If you are using ViolentMonkey as a UserScript manager on Firefox, the script will not work due to security constraints on Webextensions in Firefox, see violentmonkey/violentmonkey#173.*
+*⚠ If you are using ViolentMonkey as a UserScript manager on Firefox, the script will not work due to security constraints on Webextensions in Firefox, see [violentmonkey/violentmonkey#173](https://github.com/violentmonkey/violentmonkey/issues/173).*
 
 ## Building
 
