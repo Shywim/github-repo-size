@@ -4,7 +4,7 @@
 // @match *://github.com/*
 // @grant none
 // @description Add repository size to their GitHub homepage
-// @icon https://github.com/Shywim/github-repo-size/blob/master/icon/48.png
+// @icon https://raw.githubusercontent.com/Shywim/github-repo-size/master/icon/48.png
 // @homepageURL https://github.com/Shywim/github-repo-size
 // @supportURL https://github.com/Shywim/github-repo-size/issues
 // @author Matthieu Harlé
