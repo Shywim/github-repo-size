@@ -89,7 +89,7 @@ const createSizeElement = (repoSizeHuman) => {
   li.setAttribute('title', 'As reported by the GitHub API, it mays differ from the actual repository size.')
   const elt = document.createElement('a')
   const icon = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
-  icon.className = 'octicon octicon-database'
+  icon.className.baseVal = 'octicon octicon-database'
   icon.setAttribute('height', 16)
   icon.setAttribute('width', 14)
   icon.setAttribute('viewBox', '0 0 14 16')
