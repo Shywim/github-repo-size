@@ -11,15 +11,15 @@
 // @author Matthieu Harlé
 // @copyright 2017, Matthieu Harlé (https://matthieuharle.com)
 // @license MIT (https://github.com/Shywim/github-repo-size/blob/master/LICENSE.md)
-// @version 1.1.0
+// @version 1.2.0
 // ==/UserScript==
 
 /* global GM_getValue, GM_setValue */
 
-const getStoredToken = (key) => {
+const getStoredSetting = (key) => {
   return Promise.resolve(GM_getValue(key))
 }
 
-const setToken = (key, token) => {
-  GM_setValue(key, token)
+const setSetting = (key, value) => {
+  GM_setValue(key, value)
 }
