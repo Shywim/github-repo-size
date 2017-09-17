@@ -93,6 +93,7 @@ const saveToken = (e) => {
 
 const closeModal = () => {
   window.location.hash = ''
+  setSetting(AUTO_ASK_KEY, false)
 }
 
 const injectRepoSize = async () => {
