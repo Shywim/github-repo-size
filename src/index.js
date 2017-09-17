@@ -1,11 +1,24 @@
+// - COMMON -
 const GITHUB_API = 'https://api.github.com/repos/'
 const REPO_STATS_CLASS = 'numbers-summary'
 const REPO_SIZE_ID = 'addon-repo-size'
 const SIZE_KILO = 1024
 const UNITS = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
+const TOKEN_KEY = 'grs_gh_token'
+const AUTO_ASK_KEY = 'grs_auto_ask'
+const MODAL_ID = 'grs_token_modal'
+const TOKEN_INPUT_ID = 'grs_token_input'
 
 const handleErr = (err) => {
   console.error(err)
+}
+
+const checkIsPrivate = () => {
+  if (document.getElementsByClassName('private').length > 0) {
+    return true
+  }
+
+  return false
 }
 
 const getRepoSlug = (url) => {
@@ -18,8 +31,12 @@ const getRepoSlug = (url) => {
   return pathes[0] + '/' + pathes[1]
 }
 
-const getRepoData = (slug) => {
-  const request = new window.Request(GITHUB_API + slug)
+const getRepoData = (slug, token) => {
+  let url = GITHUB_API + slug
+  if (token != null) {
+    url += `?access_token=${token}`
+  }
+  const request = new window.Request(url)
 
   return window.fetch(request)
   .then(checkResponse)
@@ -54,7 +71,31 @@ const getHumanFileSize = (size) => {
   }
 }
 
-const injectRepoSize = () => {
+const askForToken = async (e) => {
+  if (e != null) {
+    e.preventDefault()
+  }
+
+  await createModalElement()
+  window.location.hash = MODAL_ID
+}
+
+const saveToken = (e) => {
+  e.preventDefault()
+  const token = e.target.elements[TOKEN_INPUT_ID].value
+  setSetting(TOKEN_KEY, token)
+  closeModal()
+
+  if (token != null) {
+    injectRepoSize()
+  }
+}
+
+const closeModal = () => {
+  window.location.hash = ''
+}
+
+const injectRepoSize = async () => {
   const repoSlug = getRepoSlug(window.location.pathname.substring(1))
 
   if (repoSlug != null) {
@@ -67,19 +108,38 @@ const injectRepoSize = () => {
     const statsElt = statsCol[0]
     const repoSizeElt = document.getElementById(REPO_SIZE_ID)
 
-    if (repoSizeElt == null) {
-      getRepoData(repoSlug)
-      .then(repoSize => {
-        if (repoSize == null) {
-          return
-        }
-
-        const humanSize = getHumanFileSize(repoSize * 1024)
-
-        const sizeTag = createSizeElement(humanSize)
-        statsElt.appendChild(sizeTag)
-      })
+    // nothing to do if we already have the size displayed
+    if (repoSizeElt != null) {
+      return
     }
+
+    let getRepoDataPromise
+    if (checkIsPrivate()) {
+      const token = await getStoredSetting(TOKEN_KEY)
+      if (token == null) {
+        const autoAsk = await getStoredSetting(AUTO_ASK_KEY)
+        if (autoAsk == null || autoAsk === true) {
+          askForToken()
+        }
+        return
+      }
+
+      getRepoDataPromise = getRepoData(repoSlug, token)
+    } else {
+      getRepoDataPromise = getRepoData(repoSlug)
+    }
+
+    getRepoDataPromise
+    .then(repoSize => {
+      if (repoSize == null) {
+        return
+      }
+
+      const humanSize = getHumanFileSize(repoSize * 1024)
+
+      const sizeTag = createSizeElement(humanSize)
+      statsElt.appendChild(sizeTag)
+    })
   }
 }
 
@@ -88,6 +148,8 @@ const createSizeElement = (repoSizeHuman) => {
   li.id = REPO_SIZE_ID
   li.setAttribute('title', 'As reported by the GitHub API, it mays differ from the actual repository size.')
   const elt = document.createElement('a')
+  elt.setAttribute('href', '#')
+  elt.onclick = askForToken
   const icon = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
   icon.className.baseVal = 'octicon octicon-database'
   icon.setAttribute('height', 16)
@@ -110,6 +172,103 @@ const createSizeElement = (repoSizeHuman) => {
   li.appendChild(elt)
   return li
 }
+
+const createModalElement = async () => {
+  const token = await getStoredSetting(TOKEN_KEY)
+
+  let div = document.getElementById(MODAL_ID)
+  if (div != null) {
+    if (token != null) {
+      const tokenInput = document.getElementById(TOKEN_INPUT_ID)
+      tokenInput.setAttribute('value', token)
+    }
+    return div
+  }
+
+  div = document.createElement('div')
+  div.id = MODAL_ID
+  div.className = 'grs_modal_overlay'
+  const modal = document.createElement('div')
+  modal.className = 'grs_modal'
+  const title = document.createElement('h2')
+  const titleText = document.createTextNode('GitHub Repository Size Settings')
+  title.appendChild(titleText)
+  modal.appendChild(title)
+  const content = document.createElement('div')
+  content.className = 'grs_modal_content'
+  const description = document.createTextNode(`You need to provide a \
+    Personal Access Token to access size of private repositories. You can \
+    create one in your GitHub settings.\
+    (to show this dialog again, click on the size text in any public repository)`)
+  content.appendChild(description)
+  const form = document.createElement('form')
+  form.onsubmit = saveToken
+  const tokenInput = document.createElement('input')
+  tokenInput.id = TOKEN_INPUT_ID
+  tokenInput.setAttribute('type', 'text')
+  tokenInput.setAttribute('name', 'gh_token')
+  if (token != null) {
+    tokenInput.setAttribute('value', token)
+  }
+  const validateButton = document.createElement('input')
+  validateButton.setAttribute('type', 'submit')
+  validateButton.setAttribute('value', 'Submit')
+  form.appendChild(tokenInput)
+  form.appendChild(validateButton)
+  content.appendChild(form)
+  const closeButton = document.createElement('button')
+  closeButton.onclick = closeModal
+  const closeButtonText = document.createTextNode('Close')
+  closeButton.appendChild(closeButtonText)
+  content.appendChild(closeButton)
+  modal.appendChild(content)
+  div.appendChild(modal)
+
+  const body = document.getElementsByTagName('body')[0]
+  body.appendChild(div)
+
+  return div
+}
+
+// define styles once
+const style = document.createElement('style')
+document.head.appendChild(style)
+style.sheet.insertRule(`
+.grs_modal_overlay {
+  position: fixed;\
+  top: 0;\
+  bottom: 0;\
+  left: 0;\
+  right: 0;\
+  background: rgba(0,0,0,0.7);\
+  transition: opacity 500ms;
+  visibility: hidden;
+  opacity: 0;
+  z-index: 50;
+}`, 0)
+
+style.sheet.insertRule(`
+.grs_modal_overlay:target {
+  visibility: visible;
+  opacity: 1;
+}`, 1)
+
+style.sheet.insertRule(`
+.grs_modal {
+  margin: 70px auto;
+  padding: 20px;
+  background: #fff;
+  border-radius: 5px;
+  width: 30%;
+  position: relative;
+  transition: all 5s ease-in-out;
+}`, 2)
+
+style.sheet.insertRule(`
+.grs_modal .grs_modal_content {
+  max-height: 30%;
+  overflow: auto;
+}`, 3)
 
 // Update to each ajax event
 document.addEventListener('pjax:end', injectRepoSize, false)

@@ -2,7 +2,8 @@
 // @name GitHub Repository Size
 // @namespace matthieuharle.com
 // @match *://github.com/*
-// @grant none
+// @grant GM_getValue
+// @grant GM_setValue
 // @description Add repository size to their GitHub homepage
 // @icon https://raw.githubusercontent.com/Shywim/github-repo-size/master/icon/48.png
 // @homepageURL https://github.com/Shywim/github-repo-size
@@ -12,3 +13,13 @@
 // @license MIT (https://github.com/Shywim/github-repo-size/blob/master/LICENSE.md)
 // @version 1.1.0
 // ==/UserScript==
+
+/* global GM_getValue, GM_setValue */
+
+const getStoredToken = (key) => {
+  return Promise.resolve(GM_getValue(key))
+}
+
+const setToken = (key, token) => {
+  GM_setValue(key, token)
+}

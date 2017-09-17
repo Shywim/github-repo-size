@@ -8,6 +8,7 @@
     "build-webext": "gulp webext",
     "build-userscript": "gulp userscript",
     "clean": "gulp clean",
+    "webext": "gulp webext-run",
     "test": "standard"
   },
   "author": "Matthieu Harlé",
@@ -20,6 +21,8 @@
     "gulp": "^3.9.1",
     "gulp-concat": "^2.6.1",
     "gulp-zip": "^4.0.0",
-    "standard": "^10.0.3"
+    "merge-stream": "^1.0.1",
+    "standard": "^10.0.3",
+    "web-ext": "^2.0.0"
   }
 }
