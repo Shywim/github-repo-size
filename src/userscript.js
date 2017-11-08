@@ -10,7 +10,7 @@
 // @supportURL https://github.com/Shywim/github-repo-size/issues
 // @author Matthieu Harlé
 // @copyright 2017, Matthieu Harlé (https://matthieuharle.com)
-// @license MIT (https://github.com/Shywim/github-repo-size/blob/master/LICENSE.md)
+// @license MIT; https://github.com/Shywim/github-repo-size/blob/master/LICENSE.md
 // @version 1.2.0
 // ==/UserScript==
 
