@@ -1,47 +1,71 @@
-const gulp = require('gulp')
+const path = require('path')
+const {
+  series,
+  parallel,
+  watch,
+  src,
+  dest
+} = require('gulp')
 const zip = require('gulp-zip')
 const concat = require('gulp-concat')
 const del = require('del')
 const merge = require('merge-stream')
-const webExt = require('web-ext/dist/web-ext').main
+const webExt = require('web-ext').default;
 
 const paths = {
   build: {
-    webext: 'build/webext',
-    webext_dist: 'build/webext-dist',
-    userscript: 'build/userscript'
+    webext: path.resolve(__dirname, './build/webext'),
+    webext_dist: path.resolve(__dirname, './build/webext-dist'),
+    userscript: path.resolve(__dirname, './build/userscript')
   }
 }
 
-gulp.task('clean', function () {
+function clean() {
   return del(['build'])
-})
+}
 
-gulp.task('webext-zip', function () {
-  return gulp.src(paths.build.webext + '/**/*')
+function webextZip() {
+  return src(paths.build.webext + '/**/*')
     .pipe(zip('github-repo-size.zip'))
-    .pipe(gulp.dest(paths.build.webext_dist))
-})
+    .pipe(dest(paths.build.webext_dist))
+}
 
-gulp.task('webext', function () {
-  const script = gulp.src(['src/webext.js', 'src/index.js'])
+function webext() {
+  const script = src(['src/webext.js', 'src/index.js'])
     .pipe(concat('src/index.js'))
 
-  const files = gulp.src(['manifest.json', 'icon/*', 'LICENSE.md', 'README.md', 'package.json', 'gulpfile.js'], {base: '.'})
+  const files = src(['manifest.json', 'icon/*', 'LICENSE.md', 'README.md', 'package.json', 'gulpfile.js'], {
+    base: '.'
+  })
 
   return merge(script, files)
-    .pipe(gulp.dest(paths.build.webext))
-})
+    .pipe(dest(paths.build.webext))
+}
 
-gulp.task('userscript', function () {
-  return gulp.src(['src/userscript.js', 'src/index.js'])
+function userscript() {
+  return src(['src/userscript.js', 'src/index.js'])
     .pipe(concat('github-repo-size.user.js'))
-    .pipe(gulp.dest(paths.build.userscript))
-})
+    .pipe(dest(paths.build.userscript))
+}
 
-gulp.task('build-all', ['webext', 'webext-zip', 'userscript'])
+const buildAll = series([webext, webextZip, userscript])
 
-gulp.task('webext-run', ['webext'], function () {
-  gulp.watch('src/**/*', ['webext'])
-  //webExt(paths.build.webext, {argv: 'run', runOptions: {shouldExitProgram: false, noInput: true}})
-})
+function webextRun() {
+  webExt.cmd.run({
+    sourceDir: paths.build.webext
+  }, {
+    shouldExitProgram: false,
+    noInput: true
+  })
+}
+
+function webextWatch() {
+  watch('src/**/*', webext)
+}
+
+exports.clean = clean
+exports.buildAll = buildAll
+exports.webextZip = webextZip
+exports.webext = webext
+exports.userscript = userscript
+exports.webextWatch = series(webext, parallel(webextWatch, webextRun))

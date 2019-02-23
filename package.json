@@ -4,11 +4,11 @@
   "description": "Firefox addon to add repository size to their Github homepage",
   "main": "src/index.js",
   "scripts": {
-    "build": "gulp build-all",
+    "build": "gulp buildAll",
     "build-webext": "gulp webext",
     "build-userscript": "gulp userscript",
     "clean": "gulp clean",
-    "webext": "gulp web-ext-run",
+    "webext": "gulp webextWatch",
     "webext:lint": "web-ext lint"
   },
   "author": "Matthieu Harlé",
@@ -23,6 +23,7 @@
     "gulp-zip": "^4.2.0",
     "merge-stream": "^1.0.1",
     "prettier": "^1.16.4",
-    "web-ext": "^3.0.0"
+    "web-ext": "^3.0.0",
+    "del": "^3.0.0"
   }
 }
