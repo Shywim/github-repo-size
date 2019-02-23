@@ -39,9 +39,9 @@ const getRepoData = (slug, token) => {
   const request = new window.Request(url)
 
   return window.fetch(request)
-  .then(checkResponse)
-  .then(getRepoSize)
-  .catch(handleErr)
+    .then(checkResponse)
+    .then(getRepoSize)
+    .catch(handleErr)
 }
 
 const checkResponse = (resp) => {
@@ -131,16 +131,16 @@ const injectRepoSize = async () => {
     }
 
     getRepoDataPromise
-    .then(repoSize => {
-      if (repoSize == null) {
-        return
-      }
+      .then(repoSize => {
+        if (repoSize == null) {
+          return
+        }
 
-      const humanSize = getHumanFileSize(repoSize * 1024)
+        const humanSize = getHumanFileSize(repoSize * 1024)
 
-      const sizeTag = createSizeElement(humanSize)
-      statsElt.appendChild(sizeTag)
-    })
+        const sizeTag = createSizeElement(humanSize)
+        statsElt.appendChild(sizeTag)
+      })
   }
 }
 

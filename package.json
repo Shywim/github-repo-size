@@ -8,8 +8,8 @@
     "build-webext": "gulp webext",
     "build-userscript": "gulp userscript",
     "clean": "gulp clean",
-    "webext": "gulp webext-run",
-    "test": "standard"
+    "webext": "gulp web-ext-run",
+    "webext:lint": "web-ext lint"
   },
   "author": "Matthieu Harlé",
   "license": "MIT",
@@ -22,7 +22,7 @@
     "gulp-concat": "^2.6.1",
     "gulp-zip": "^4.2.0",
     "merge-stream": "^1.0.1",
-    "standard": "^12.0.1",
+    "prettier": "^1.16.4",
     "web-ext": "^3.0.0"
   }
 }
