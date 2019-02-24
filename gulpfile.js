@@ -30,11 +30,23 @@ function webextZip() {
     .pipe(dest(paths.build.webext_dist))
 }
 
-function webext() {
-  const script = src(['src/webext.js', 'src/index.js'])
+function webextMain() {
+  const script = src(['src/webext.js', 'src/constants.js', 'src/index.js'])
     .pipe(concat('src/index.js'))
 
   const files = src(['manifest.json', 'icon/*', 'LICENSE.md', 'README.md', 'package.json', 'gulpfile.js'], {
+    base: '.'
+  })
+
+  return merge(script, files)
+    .pipe(dest(paths.build.webext))
+}
+
+function webextOptions() {
+  const script = src(['src/webext.js', 'src/constants.js', 'src/options.js'])
+    .pipe(concat('src/options.js'))
+
+  const files = src(['src/options.html'], {
     base: '.'
   })
 
@@ -48,10 +60,8 @@ function userscript() {
     .pipe(dest(paths.build.userscript))
 }
 
-const buildAll = series([webext, webextZip, userscript])
-
 function webextRun() {
-  webExt.cmd.run({
+  return webExt.cmd.run({
     sourceDir: paths.build.webext
   }, {
     shouldExitProgram: false,
@@ -60,8 +70,11 @@ function webextRun() {
 }
 
 function webextWatch() {
-  watch('src/**/*', webext)
+  return watch('src/**/*', webext)
 }
+
+const webext = parallel(webextMain, webextOptions)
+const buildAll = series([webext, webextZip, userscript])
 
 exports.clean = clean
 exports.buildAll = buildAll

@@ -4,7 +4,6 @@ const REPO_STATS_CLASS = 'numbers-summary'
 const REPO_SIZE_ID = 'addon-repo-size'
 const SIZE_KILO = 1024
 const UNITS = ['B', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB']
-const TOKEN_KEY = 'grs_gh_token'
 const AUTO_ASK_KEY = 'grs_auto_ask'
 const MODAL_ID = 'grs_token_modal'
 const TOKEN_INPUT_ID = 'grs_token_input'

@@ -5,6 +5,10 @@
   "homepage_url": "https://github.com/Shywim/github-repo-size",
   "version": "1.2.0",
   "description": "Add repository size to their github homepage.",
+  "options_ui": {
+    "page": "src/options.html",
+    "browser_style": true
+  },
   "applications": {
     "gecko": {
       "id": "github-repo-size@mattelrah.com"
@@ -16,12 +20,10 @@
     "64": "icon/64.png",
     "96": "icon/96.png"
   },
-  "content_scripts": [
-    {
-      "matches": ["*://github.com/*"],
-      "js": ["src/index.js"]
-    }
-  ],
+  "content_scripts": [{
+    "matches": ["*://github.com/*"],
+    "js": ["src/index.js"]
+  }],
   "permissions": [
     "*://api.github.com/repos/*",
     "storage"
