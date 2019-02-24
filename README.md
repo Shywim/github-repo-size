@@ -1,6 +1,6 @@
 # A Firefox addon to display a Github repository's size
 
-[![](https://img.shields.io/badge/code%20style-standard-brightgreen.svg?style=flat-square)](http://standardjs.com/)
+[![Build Status](https://cloud.drone.io/api/badges/Shywim/github-repo-size/status.svg)](https://cloud.drone.io/Shywim/github-repo-size)
 [![Mozilla Add-on](https://img.shields.io/amo/v/github-repo-size.svg?style=flat-square)][amo]
 [![UserScript](https://img.shields.io/badge/userscript-v1.2.0-blue.svg?style=flat-square)][openjs]
 
