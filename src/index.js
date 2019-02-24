@@ -228,58 +228,6 @@ const createSizeWrapperElement = (parent, children) => {
   children.forEach(c => elt.appendChild(c))
 }
 
-// define styles once
-const style = document.createElement('style')
-document.head.appendChild(style)
-style.sheet.insertRule(
-  `
-.grs_modal_overlay {
-  position: fixed;\
-  top: 0;\
-  bottom: 0;\
-  left: 0;\
-  right: 0;\
-  background: rgba(0,0,0,0.7);\
-  transition: opacity 500ms;
-  visibility: hidden;
-  opacity: 0;
-  z-index: 50;
-}`,
-  0
-)
-
-style.sheet.insertRule(
-  `
-.grs_modal_overlay:target {
-  visibility: visible;
-  opacity: 1;
-}`,
-  1
-)
-
-style.sheet.insertRule(
-  `
-.grs_modal {
-  margin: 70px auto;
-  padding: 20px;
-  background: #fff;
-  border-radius: 5px;
-  width: 30%;
-  position: relative;
-  transition: all 5s ease-in-out;
-}`,
-  2
-)
-
-style.sheet.insertRule(
-  `
-.grs_modal .grs_modal_content {
-  max-height: 30%;
-  overflow: auto;
-}`,
-  3
-)
-
 // Update to each ajax event
 document.addEventListener('pjax:end', injectRepoSize, false)
 
