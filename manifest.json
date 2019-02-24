@@ -3,7 +3,7 @@
   "name": "Github Repo Size",
   "author": "Matthieu Harlé",
   "homepage_url": "https://github.com/Shywim/github-repo-size",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "description": "Add repository size to their github homepage.",
   "options_ui": {
     "page": "src/options.html",
@@ -15,10 +15,12 @@
     }
   },
   "icons": {
-    "32": "icon/32.png",
-    "48": "icon/48.png",
-    "64": "icon/64.png",
-    "96": "icon/96.png"
+    "32": "icon/icon.svg",
+    "48": "icon/icon.svg",
+    "64": "icon/icon.svg",
+    "96": "icon/icon.svg",
+    "128": "icon/icon.svg",
+    "256": "icon/icon.svg"
   },
   "content_scripts": [{
     "matches": ["*://github.com/*"],
