@@ -20,7 +20,7 @@ steps:
   settings:
     api_key:
       from_secret: github_token
-    files: /tmp/artifacts
+    files: /tmp/artifacts/*
   when:
     event: tag
 
