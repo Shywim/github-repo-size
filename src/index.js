@@ -199,6 +199,9 @@ const createSizeWrapperElement = (parent, children) => {
             <input id="${TOKEN_INPUT_ID}" class="form-control long" autocomplete="off" type="text" name="gh_token">
           </div>
         </div>
+        <div class="flash flash-full flash-warn">
+        <strong>Beware if you use a public device!</strong> The token will be saved locally, in the browser storage.
+        </div>
         <div class="d-flex flex-items-center flex-justify-between p-3 border-top">
           <button type="submit" class="btn btn-primary first-in-line">
             Save
