@@ -191,7 +191,7 @@ const createSizeWrapperElement = (parent, children) => {
         </div>
         <div class="px-3 py-2 text-gray-dark">
           <p class="text-gray">You need to provide a Personal Access Token to access size of private repositories.<br>
-          You can create one in your <a style="display: inline; color: #0366d6;" href="https://github.com/settings/tokens">GitHub settings</a>.<br>
+          You can create one in your <a style="display: inline; color: #0366d6;" href="https://github.com/settings/tokens">GitHub settings</a>. <strong>(don't forget to check the "repo" permission)</strong><br>
           <span style="font-size: 10px; font-weight: 600;">(to show this dialog again, click on the size element in any public repository)</span></p>
           <div class="form-group">
             <label for="gh_token">Personal Access Token</label>
