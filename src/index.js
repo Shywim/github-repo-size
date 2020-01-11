@@ -166,7 +166,16 @@ const createSizeElements = repoSizeHuman => {
   return [size, whiteSpace, unitText]
 }
 
-const createSizeWrapperElement = (parent, children) => {
+const createSizeWrapperElement = async (parent, children) => {
+  const storedToken = await getStoredSetting(TOKEN_KEY)
+  let tokenInfo = ''
+  if (storedToken) {
+    tokenInfo = `
+      <div class="flash flash-full flash-info">
+        A token is already saved, but is not displayed for obvious security reasons.
+      </div>
+    `
+  }
   const li = document.createElement('li')
   li.id = REPO_SIZE_ID
   li.setAttribute(
@@ -198,8 +207,9 @@ const createSizeWrapperElement = (parent, children) => {
             <input id="${TOKEN_INPUT_ID}" class="form-control long" autocomplete="off" type="text" name="gh_token">
           </div>
         </div>
+        ${tokenInfo}
         <div class="flash flash-full flash-warn">
-        <strong>Beware if you use a public device!</strong> The token will be saved locally, in the browser storage.
+          <strong>Beware if you use a public device!</strong> The token will be saved locally, in the browser storage.
         </div>
         <div class="d-flex flex-items-center flex-justify-between p-3 border-top">
           <button type="submit" class="btn btn-primary first-in-line">
