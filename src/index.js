@@ -168,8 +168,9 @@ const createSizeElements = repoSizeHuman => {
 
 const createSizeWrapperElement = async (parent, children) => {
   const storedToken = await getStoredSetting(TOKEN_KEY)
-  let tokenInfo = ''
+  let tokenInfo = '', tokenPlaceholder = ''
   if (storedToken) {
+    tokenPlaceholder = '****************************************'
     tokenInfo = `
       <div class="flash flash-full flash-info">
         A token is already saved, but is not displayed for obvious security reasons.
@@ -204,7 +205,7 @@ const createSizeWrapperElement = async (parent, children) => {
           <span style="font-size: 10px; font-weight: 600;">(to show this dialog again, click on the size element in any public repository)</span></p>
           <div class="form-group">
             <label for="gh_token">Personal Access Token</label>
-            <input id="${TOKEN_INPUT_ID}" class="form-control long" autocomplete="off" type="text" name="gh_token">
+            <input id="${TOKEN_INPUT_ID}" class="form-control long" autocomplete="off" type="text" name="gh_token" placeholder="${tokenPlaceholder}">
           </div>
         </div>
         ${tokenInfo}

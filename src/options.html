@@ -5,29 +5,22 @@
 <head>
   <meta charset="utf-8">
   <style type="text/css">
-    label {
-      font-weight: 600;
-      display: block;
-    }
-
-    input {
-      display: block;
-    }
-
-    .form-group {
-      margin-bottom: 10px;
+    body {
+      font-size: 1.25em;
     }
   </style>
 </head>
 
-<body>
+<body class="browser-style">
   <form id="ghs-options-form">
-    <div class="form-group">
-      <label>Personal Access Token</label>
-      <input type="text" name="ghs-token">
-      <div id="existing-token" style="display: hidden">⚠ A token is already saved, but is not displayed for obvious security reasons.</div>
+    <div class="panel-section panel-section-formElements">
+      <div class="browser-style panel-formElements-item">
+        <label>Personal Access Token</label>
+        <input type="text" name="ghs-token">
+      </div>
+      <div id="existing-token" style="display: none">⚠ A token is already saved, but is not displayed for obvious security reasons.</div>
     </div>
-    <button type="submit">Save</button>
+    <button class="browser-style default" type="submit">Save</button>
   </form>
   <script src="options.js"></script>
 </body>
