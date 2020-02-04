@@ -32,10 +32,11 @@ const getRepoSlug = url => {
 
 const getRepoData = (slug, token) => {
   let url = GITHUB_API + slug
-  if (token != null) {
-    url += `?access_token=${token}`
-  }
-  const request = new window.Request(url)
+  const request = new window.Request(url, {
+      headers: new window.Headers(token ? {
+        'Authorization': `Bearer ${token}`
+      } : {})
+  })
 
   return window
     .fetch(request)
