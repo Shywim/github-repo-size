@@ -1,5 +1,5 @@
 // - COMMON -
-const GITHUB_API = 'https://api.github.com/repos/'
+const GITHUB_API = 'https://api.github.com/graphql'
 const REPO_STATS_CLASS = 'numbers-summary'
 const REPO_SIZE_ID = 'addon-repo-size'
 const SIZE_KILO = 1024
@@ -12,30 +12,26 @@ const handleErr = err => {
   console.error(err)
 }
 
-const checkIsPrivate = () => {
-  if (document.getElementsByClassName('private').length > 0) {
-    return true
-  }
+const getRepoInfo = url => {
+  const paths = url.split('/')
 
-  return false
-}
-
-const getRepoSlug = url => {
-  const pathes = url.split('/')
-
-  if (pathes.length < 2) {
+  if (paths.length < 2) {
     return null
   }
 
-  return pathes[0] + '/' + pathes[1]
+  return { owner: paths[0], name: paths[1] }
 }
 
-const getRepoData = (slug, token) => {
-  let url = GITHUB_API + slug
-  if (token != null) {
-    url += `?access_token=${token}`
-  }
-  const request = new window.Request(url)
+const getRepoData = (repoInfo, token) => {
+  const headers = new window.Headers()
+  headers.set('Content-Type', 'application/json')
+  if (token) headers.set('Authorization',`Bearer ${token}`)
+
+  const request = new window.Request(GITHUB_API, {
+    headers: headers,
+    method: 'POST',
+    body: JSON.stringify({ query: `query { repository(owner: "${repoInfo.owner}", name: "${repoInfo.name}") { diskUsage } }` })
+  })
 
   return window
     .fetch(request)
@@ -52,8 +48,8 @@ const checkResponse = resp => {
   throw Error(`Invalid response from github ${resp.status} - ${resp.body}`)
 }
 
-const getRepoSize = repoData => {
-  return repoData.size
+const getRepoSize = data => {
+  return data.data.repository.diskUsage
 }
 
 const getHumanFileSize = size => {
@@ -100,9 +96,9 @@ const closeModal = () => {
 }
 
 const injectRepoSize = async () => {
-  const repoSlug = getRepoSlug(window.location.pathname.substring(1))
+  const repoInfo = getRepoInfo(window.location.pathname.substring(1))
 
-  if (repoSlug != null) {
+  if (repoInfo != null) {
     const statsCol = document.getElementsByClassName(REPO_STATS_CLASS)
 
     if (statsCol.length !== 1) {
@@ -117,33 +113,25 @@ const injectRepoSize = async () => {
       return
     }
 
-    let getRepoDataPromise
-    if (checkIsPrivate()) {
-      const token = await getStoredSetting(TOKEN_KEY)
-      if (token == null) {
-        const autoAsk = await getStoredSetting(AUTO_ASK_KEY)
-        if (autoAsk == null || autoAsk === true) {
-          askForToken()
-        }
-
-        createSizeWrapperElement(statsElt, createMissingTokenElement())
-        return
+    const token = await getStoredSetting(TOKEN_KEY)
+    if (token == null) {
+      const autoAsk = await getStoredSetting(AUTO_ASK_KEY)
+      if (autoAsk == null || autoAsk === true) {
+        askForToken()
       }
 
-      getRepoDataPromise = getRepoData(repoSlug, token)
-    } else {
-      getRepoDataPromise = getRepoData(repoSlug)
+      createSizeWrapperElement(statsElt, createMissingTokenElement())
+      return
     }
 
-    getRepoDataPromise.then(repoSize => {
-      if (repoSize == null) {
-        return
-      }
+    let repoSize = await getRepoData(repoInfo, token)
+    if (repoSize == null) {
+      return
+    }
 
-      const humanSize = getHumanFileSize(repoSize * 1024)
+    const humanSize = getHumanFileSize(repoSize * 1024)
 
-      createSizeWrapperElement(statsElt, createSizeElements(humanSize))
-    })
+    createSizeWrapperElement(statsElt, createSizeElements(humanSize))
   }
 }
 

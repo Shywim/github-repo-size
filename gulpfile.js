@@ -61,6 +61,7 @@ function userscript() {
 }
 
 function webextRun() {
+  webExt.util.logger.consoleStream.makeVerbose()
   return webExt.cmd.run({
     sourceDir: paths.build.webext
   }, {
