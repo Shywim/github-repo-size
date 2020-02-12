@@ -3,7 +3,7 @@
   "name": "Github Repo Size",
   "author": "Matthieu Harlé",
   "homepage_url": "https://github.com/Shywim/github-repo-size",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "description": "Add repository size to their github homepage.",
   "options_ui": {
     "page": "src/options.html",
