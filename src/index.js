@@ -1,5 +1,6 @@
 // - COMMON -
 const GITHUB_API = 'https://api.github.com/graphql'
+const GITHUB_API_V3 = 'https://api.github.com/repos/'
 const REPO_STATS_CLASS = 'numbers-summary'
 const REPO_SIZE_ID = 'addon-repo-size'
 const SIZE_KILO = 1024
@@ -12,6 +13,14 @@ const handleErr = err => {
   console.error(err)
 }
 
+const checkIsPrivate = () => {
+  if (document.getElementsByClassName('private').length > 0) {
+    return true
+  }
+
+  return false
+}
+
 const getRepoInfo = url => {
   const paths = url.split('/')
 
@@ -20,6 +29,17 @@ const getRepoInfo = url => {
   }
 
   return { owner: paths[0], name: paths[1] }
+}
+
+const getRepoDataAnon = (repoInfo) => {
+  const url = `${GITHUB_API_V3}${repoInfo.owner}/${repoInfo.name}`
+  const request = new window.Request(url)
+
+  return window
+    .fetch(request)
+    .then(checkResponse)
+    .then(repoData => repoData.size)
+    .catch(handleErr)
 }
 
 const getRepoData = (repoInfo, token) => {
@@ -114,7 +134,7 @@ const injectRepoSize = async () => {
     }
 
     const token = await getStoredSetting(TOKEN_KEY)
-    if (token == null) {
+    if (token == null && checkIsPrivate()) {
       const autoAsk = await getStoredSetting(AUTO_ASK_KEY)
       if (autoAsk == null || autoAsk === true) {
         askForToken()
@@ -124,7 +144,13 @@ const injectRepoSize = async () => {
       return
     }
 
-    let repoSize = await getRepoData(repoInfo, token)
+    let repoSize
+    if (token == null) {
+      repoSize = await getRepoDataAnon(repoInfo)
+    } else {
+      repoSize = await getRepoData(repoInfo, token)
+    }
+
     if (repoSize == null) {
       return
     }
