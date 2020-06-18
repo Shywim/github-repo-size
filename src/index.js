@@ -2,6 +2,7 @@
 const GITHUB_API = 'https://api.github.com/graphql'
 const GITHUB_API_V3 = 'https://api.github.com/repos/'
 const REPO_STATS_CLASS = 'numbers-summary'
+const REPO_REFRESH_STATS_QUERY = '.repository-content .Box .Details ul'
 const REPO_SIZE_ID = 'addon-repo-size'
 const SIZE_KILO = 1024
 const UNITS = ['B', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB']
@@ -119,13 +120,23 @@ const injectRepoSize = async () => {
   const repoInfo = getRepoInfo(window.location.pathname.substring(1))
 
   if (repoInfo != null) {
+    let statsElt, isRefresh = false
     const statsCol = document.getElementsByClassName(REPO_STATS_CLASS)
 
-    if (statsCol.length !== 1) {
-      return
+    if (statsCol.length === 0) {
+      // maybe we're on the design refresh
+      const statsRow = document.querySelector(REPO_REFRESH_STATS_QUERY)
+      if (statsRow == null) {
+        // can't find any element to add our stats element, we stop here
+        return
+      }
+
+      isRefresh = true
+      statsElt = statsRow
+    } else {
+      statsElt = statsCol[0]
     }
 
-    const statsElt = statsCol[0]
     const repoSizeElt = document.getElementById(REPO_SIZE_ID)
 
     // nothing to do if we already have the size displayed
@@ -156,8 +167,8 @@ const injectRepoSize = async () => {
     }
 
     const humanSize = getHumanFileSize(repoSize * 1024)
-
-    createSizeWrapperElement(statsElt, createSizeElements(humanSize))
+    const sizeElt = isRefresh ? createRepoRefreshSizeElements(humanSize) : createSizeElements(humanSize)
+    createSizeWrapperElement(statsElt, createSizeElements(humanSize), isRefresh)
   }
 }
 
@@ -180,7 +191,19 @@ const createSizeElements = repoSizeHuman => {
   return [size, whiteSpace, unitText]
 }
 
-const createSizeWrapperElement = async (parent, children) => {
+const createRepoRefreshSizeElements = repoSizeHuman => {
+  const size = document.createElement('strong')
+  const sizeText = document.createTextNode(repoSizeHuman.size)
+  size.appendChild(sizeText)
+
+  const whiteSpace = document.createTextNode(' ')
+
+  const unitText = document.createTextNode(repoSizeHuman.unit)
+
+  return [size, whiteSpace, unitText]
+}
+
+const createSizeWrapperElement = async (parent, children, isRefresh = false) => {
   const storedToken = await getStoredSetting(TOKEN_KEY)
   let tokenInfo = '', tokenPlaceholder = ''
   if (storedToken) {
@@ -201,7 +224,7 @@ const createSizeWrapperElement = async (parent, children) => {
   li.innerHTML = `
   <details id="${MODAL_ID}-size-stat-wrapper" class="details-reset details-overlay details-overlay-dark">
     <summary>
-      <a href="#" id="${MODAL_ID}-size-stat-content">
+      <a id="${MODAL_ID}-size-stat-content" ${isRefresh ? 'class="link-gray-dark no-underline d-inline-block"' : ''}>
         <svg class="octicon octicon-database" height="16" width="14" viewBox="0 0 14 16" aria-hidden="true" version="1.1"><path d="M6,15 C2.69,15 0,14.1 0,13 L0,11 C0,10.83 0.09,10.66 0.21,10.5 C0.88,11.36 3.21,12 6,12 C8.79,12 11.12,11.36 11.79,10.5 C11.92,10.66 12,10.83 12,11 L12,13 C12,14.1 9.31,15 6,15 L6,15 Z M6,11 C2.69,11 0,10.1 0,9 L0,7 C0,6.89 0.04,6.79 0.09,6.69 L0.09,6.69 C0.12,6.63 0.16,6.56 0.21,6.5 C0.88,7.36 3.21,8 6,8 C8.79,8 11.12,7.36 11.79,6.5 C11.84,6.56 11.88,6.63 11.91,6.69 L11.91,6.69 C11.96,6.79 12,6.9 12,7 L12,9 C12,10.1 9.31,11 6,11 L6,11 Z M6,7 C2.69,7 0,6.1 0,5 L0,4 L0,3 C0,1.9 2.69,1 6,1 C9.31,1 12,1.9 12,3 L12,4 L12,5 C12,6.1 9.31,7 6,7 L6,7 Z M6,2 C3.79,2 2,2.45 2,3 C2,3.55 3.79,4 6,4 C8.21,4 10,3.55 10,3 C10,2.45 8.21,2 6,2 L6,2 Z" fill-rule="evenodd"></path></svg>
       </a>
     </summary>
@@ -239,7 +262,6 @@ const createSizeWrapperElement = async (parent, children) => {
   parent.appendChild(li)
 
   const elt = document.getElementById(`${MODAL_ID}-size-stat-content`)
-  elt.setAttribute('href', '#')
   elt.addEventListener('click', askForToken)
   elt.appendChild(document.createTextNode(' '))
 
@@ -248,6 +270,10 @@ const createSizeWrapperElement = async (parent, children) => {
 
   const form = document.getElementById(`${MODAL_ID}-form`)
   form.addEventListener('submit', saveToken)
+  
+  if (isRefresh) {
+    li.className = 'ml-3 d-none d-md-block'
+  }
 
   children.forEach(c => elt.appendChild(c))
 }
