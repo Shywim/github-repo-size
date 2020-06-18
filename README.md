@@ -29,9 +29,9 @@ addon or you can visit the addon's settings page (Firefox only).
 
 ## Building
 
-- Use `npm run build-webext` to build the Firefox webextension
-- Use `npm run build-userscript` to build the UserScript
-- Use `npm run webext` to have an automated build on changes
+- Use `yarn build-webext` to build the Firefox webextension
+- Use `yarn build-userscript` to build the UserScript
+- Use `yarn webext` to have an automated build on changes
 
 [amo]: https://addons.mozilla.org/firefox/addon/github-repo-size/
 [ujs]: https://github.com/Shywim/github-repo-size/releases/latest/download/github-repo-size.user.js
