@@ -2,7 +2,7 @@
 
 [![Build Status](https://cloud.drone.io/api/badges/Shywim/github-repo-size/status.svg)](https://cloud.drone.io/Shywim/github-repo-size)
 [![Mozilla Add-on](https://img.shields.io/amo/v/github-repo-size.svg?style=flat-square)][amo]
-[![UserScript](https://img.shields.io/badge/userscript-v1.2.0-blue.svg?style=flat-square)][openjs]
+[![UserScript](https://img.shields.io/badge/userscript-v1.6.0-blue.svg?style=flat-square)][ujs]
 
 Add repository size to the Github's summary.
 
@@ -15,8 +15,7 @@ innacurate due to how GitHub stores git repositories! See [here][soq] and
 ## Usage
 
 Download the addon from **[addons.mozilla.org][amo]** or, if you prefer, you
-can download this project as a userscript on **[OpenUserJs][openjs]** (also
-available on the [GitHub releases page][ghreleases]).
+can download this project as a userscript from the **[GitHub releases page][ghreleases]**.
 
 ### Private Repositories
 
@@ -35,7 +34,7 @@ addon or you can visit the addon's settings page (Firefox only).
 - Use `npm run webext` to have an automated build on changes
 
 [amo]: https://addons.mozilla.org/firefox/addon/github-repo-size/
-[openjs]: https://openuserjs.org/scripts/Shywim/GitHub_Repository_Size
+[ujs]: https://github.com/Shywim/github-repo-size/releases/latest/download/github-repo-size.user.js
 [ghreleases]: https://github.com/Shywim/github-repo-size/releases
 [soq]: https://stackoverflow.com/a/8679592/1424030
 [ghb]: https://git-blame.blogspot.fr/2012/08/bringing-bit-more-sanity-to-alternates.html
