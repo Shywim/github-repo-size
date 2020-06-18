@@ -151,7 +151,7 @@ const injectRepoSize = async () => {
         askForToken()
       }
 
-      createSizeWrapperElement(statsElt, createMissingTokenElement())
+      createSizeWrapperElement(statsElt, createMissingTokenElement(), isRefresh)
       return
     }
 
