@@ -55,7 +55,7 @@ function webextOptions() {
 }
 
 function userscript() {
-  return src(['src/userscript.js', 'src/index.js'])
+  return src(['src/userscript.js', 'src/constants.js', 'src/index.js'])
     .pipe(concat('github-repo-size.user.js'))
     .pipe(dest(paths.build.userscript))
 }
