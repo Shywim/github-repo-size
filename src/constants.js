@@ -1,1 +1,0 @@
-const TOKEN_KEY = 'grs_gh_token'

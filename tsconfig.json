@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "moduleResolution": "node",
+    "strict": true,
+    "module": "es2015",
+    "lib": ["es2015", "es2016", "es2017", "dom", "dom.iterable"],
+    "esModuleInterop": true,
+    "target": "ES2015",
+    "noUnusedLocals": true,
+    "noImplicitReturns": true,
+    "skipLibCheck": true,
+    "noFallthroughCasesInSwitch": true
+  }
+}

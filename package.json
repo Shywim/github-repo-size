@@ -4,11 +4,14 @@
   "description": "Firefox addon to add repository size to their Github homepage",
   "main": "src/index.js",
   "scripts": {
-    "build": "gulp buildAll",
-    "build-webext": "gulp webext",
-    "build-userscript": "gulp userscript",
-    "clean": "gulp clean",
-    "webext": "gulp webextWatch",
+    "build": "npm-run-all --parallel build:main build:options copyAssets",
+    "build:main": "parcel build src/index.ts --public-url ./",
+    "build:options": "parcel build src/options.ts --public-url ./",
+    "watch": "npm-run-all --parallel watch:main watch:options copyAssets",
+    "watch:main": "parcel watch src/index.ts --public-url ./",
+    "watch:options": "parcel watch src/options.ts --public-url ./",
+    "copyAssets": "cpy manifest.json icon/icon.svg LICENSE.md README.md package.json tsconfig.json yarn.lock src/options.html dist/",
+    "webext:run": "web-ext run -s ./dist",
     "webext:lint": "web-ext lint"
   },
   "author": "Matthieu Harlé",
@@ -18,12 +21,19 @@
     "url": "https://github.com/Shywim/github-repo-size.git"
   },
   "devDependencies": {
-    "del": "^5.1.0",
-    "gulp": "^4.0.0",
-    "gulp-concat": "^2.6.1",
-    "gulp-zip": "^5.0.1",
-    "merge-stream": "^2.0.0",
-    "prettier": "^2.0.5",
-    "web-ext": "^4.2.0"
-  }
+    "@types/firefox-webext-browser": "^82.0.1",
+    "cpy-cli": "^3.1.1",
+    "npm-run-all": "^4.1.5",
+    "parcel-bundler": "^1.12.5",
+    "prettier": "^2.4.1",
+    "rimraf": "^3.0.2",
+    "typescript": "^4.4.3",
+    "web-ext": "^6.4.0"
+  },
+  "dependencies": {
+    "dom-loaded": "^3.0.0"
+  },
+  "browserslist": [
+    "last 1 Firefox version"
+  ]
 }
