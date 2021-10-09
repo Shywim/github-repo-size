@@ -4,15 +4,16 @@
   "description": "Firefox addon to add repository size to their Github homepage",
   "main": "src/index.js",
   "scripts": {
-    "build": "npm-run-all --parallel build:main build:options copyAssets",
+    "build": "npm-run-all --parallel build:main build:options copyAssets copyIcons",
     "build:main": "parcel build src/index.ts --public-url ./",
     "build:options": "parcel build src/options.ts --public-url ./",
-    "watch": "npm-run-all --parallel watch:main watch:options copyAssets",
+    "watch": "npm-run-all --parallel watch:main watch:options copyAssets copyIcons",
     "watch:main": "parcel watch src/index.ts --public-url ./",
     "watch:options": "parcel watch src/options.ts --public-url ./",
-    "copyAssets": "cpy manifest.json icon/icon.svg LICENSE.md README.md package.json tsconfig.json yarn.lock src/options.html dist/",
+    "copyAssets": "cpy manifest.json LICENSE.md README.md package.json tsconfig.json yarn.lock src/options.html dist/",
+    "copyIcons": "cpy --parents icon/icon.svg dist/",
     "webext:run": "web-ext run -s ./dist",
-    "webext:lint": "web-ext lint"
+    "webext:lint": "web-ext lint -s ./dist"
   },
   "author": "Matthieu Harlé",
   "license": "MIT",

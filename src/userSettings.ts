@@ -5,6 +5,6 @@ export const getStoredSetting = async (key: string) => {
 
 export const setSetting = async (key: string, value: unknown) => {
   await browser.storage.local.set({
-    [key]: value
+    [key]: value,
   })
 }

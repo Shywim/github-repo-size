@@ -146,9 +146,15 @@ const injectRepoSize = async () => {
     } catch (err: unknown) {
       if (err instanceof Error) {
         if (err.message === ERROR_UNAUTHORIZED) {
-          createSizeWrapperElement(statsElt, createErrorElement('Unauthorized Token!'))
+          createSizeWrapperElement(
+            statsElt,
+            createErrorElement('Unauthorized Token!')
+          )
         } else {
-          createSizeWrapperElement(statsElt, createErrorElement('Unknown Error!'))
+          createSizeWrapperElement(
+            statsElt,
+            createErrorElement('Unknown Error!')
+          )
         }
       }
     }

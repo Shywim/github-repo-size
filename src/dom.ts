@@ -86,7 +86,7 @@ export const createSizeWrapperElement = async (
   }
   const li = document.createElement('li')
   li.id = REPO_SIZE_ID
-  li.className = "ml-0 ml-md-3"
+  li.className = 'ml-0 ml-md-3'
 
   li.innerHTML = `
   <details id="${MODAL_ID}-size-stat-wrapper" class="details-reset details-overlay details-overlay-dark">
