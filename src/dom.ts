@@ -39,38 +39,35 @@ const closeModal = () => {
 export const createMissingTokenElement = () => {
   const text = document.createTextNode('Missing token!')
 
-  return [text]
+  return text
 }
 
 export const createSizeElements = (repoSizeHuman: HumanSize) => {
-  const size = document.createElement('span')
-  size.className = 'num text-emphasized'
-  const sizeText = document.createTextNode(repoSizeHuman.size)
-  size.appendChild(sizeText)
+  const sizeContainer = document.createElement('span')
+  sizeContainer.className = 'd-none d-sm-inline'
 
-  const whiteSpace = document.createTextNode(' ')
-
-  const unitText = document.createTextNode(repoSizeHuman.unit)
-
-  return [size, whiteSpace, unitText]
-}
-
-export const createRepoRefreshSizeElements = (repoSizeHuman: HumanSize) => {
   const size = document.createElement('strong')
   const sizeText = document.createTextNode(repoSizeHuman.size)
   size.appendChild(sizeText)
 
   const whiteSpace = document.createTextNode(' ')
 
+  const unitContainer = document.createElement('span')
+  unitContainer.className = 'color-text-secondary d-none d-lg-inline'
+  unitContainer.ariaLabel = `Size of repository in ${repoSizeHuman.unit}`
   const unitText = document.createTextNode(repoSizeHuman.unit)
+  unitContainer.appendChild(unitText)
 
-  return [size, whiteSpace, unitText]
+  sizeContainer.appendChild(size)
+  sizeContainer.appendChild(whiteSpace)
+  sizeContainer.appendChild(unitContainer)
+
+  return sizeContainer
 }
 
 export const createSizeWrapperElement = async (
   parent: Element,
-  children: Array<Node>,
-  isRefresh = false
+  children: Node
 ) => {
   const storedToken = await getStoredSetting(TOKEN_KEY)
   let tokenInfo = '',
@@ -85,6 +82,7 @@ export const createSizeWrapperElement = async (
   }
   const li = document.createElement('li')
   li.id = REPO_SIZE_ID
+  li.className = "ml-0 ml-md-3"
   li.setAttribute(
     'title',
     'As reported by the GitHub API, it mays differ from the actual repository size.'
@@ -93,17 +91,9 @@ export const createSizeWrapperElement = async (
   li.innerHTML = `
   <details id="${MODAL_ID}-size-stat-wrapper" class="details-reset details-overlay details-overlay-dark">
     <summary>
-      ${
-        !isRefresh
-          ? '<li>'
-          : '' /* this `li` purpose is to have the same `a` CSS behavior than other items in the old design */
-      } 
-      <a id="${MODAL_ID}-size-stat-content" ${
-    isRefresh ? 'class="link-gray-dark no-underline d-inline-block"' : ''
-  }>
+      <a id="${MODAL_ID}-size-stat-content" class="pl-3 pr-3 py-3 p-md-0 mt-n3 mb-n3 mr-n3 m-md-0 Link--primary no-underline no-wrap">
         <svg class="octicon octicon-database" height="16" width="14" viewBox="0 0 14 16" aria-hidden="true" version="1.1"><path d="M6,15 C2.69,15 0,14.1 0,13 L0,11 C0,10.83 0.09,10.66 0.21,10.5 C0.88,11.36 3.21,12 6,12 C8.79,12 11.12,11.36 11.79,10.5 C11.92,10.66 12,10.83 12,11 L12,13 C12,14.1 9.31,15 6,15 L6,15 Z M6,11 C2.69,11 0,10.1 0,9 L0,7 C0,6.89 0.04,6.79 0.09,6.69 L0.09,6.69 C0.12,6.63 0.16,6.56 0.21,6.5 C0.88,7.36 3.21,8 6,8 C8.79,8 11.12,7.36 11.79,6.5 C11.84,6.56 11.88,6.63 11.91,6.69 L11.91,6.69 C11.96,6.79 12,6.9 12,7 L12,9 C12,10.1 9.31,11 6,11 L6,11 Z M6,7 C2.69,7 0,6.1 0,5 L0,4 L0,3 C0,1.9 2.69,1 6,1 C9.31,1 12,1.9 12,3 L12,4 L12,5 C12,6.1 9.31,7 6,7 L6,7 Z M6,2 C3.79,2 2,2.45 2,3 C2,3.55 3.79,4 6,4 C8.21,4 10,3.55 10,3 C10,2.45 8.21,2 6,2 L6,2 Z" fill-rule="evenodd"></path></svg>
       </a>
-      ${!isRefresh ? '</li>' : ''} 
     </summary>
     <details-dialog style="white-space: normal" class="details-dialog rounded-1 anim-fade-in fast Box Box--overlay">
       <form id="${MODAL_ID}-form" style="text-align: left" class="position-relative flex-auto js-user-status-form">
@@ -157,9 +147,5 @@ export const createSizeWrapperElement = async (
   }
   form.addEventListener('submit', saveToken)
 
-  if (isRefresh) {
-    li.className = 'ml-3 d-none d-md-block'
-  }
-
-  children.forEach((c) => elt.appendChild(c))
+  elt.appendChild(children)
 }

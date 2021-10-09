@@ -12,7 +12,7 @@ import {
 import {
   askForToken,
   createMissingTokenElement,
-  createRepoRefreshSizeElements,
+  createSizeElements,
   createSizeWrapperElement,
 } from './dom'
 import {
@@ -145,7 +145,7 @@ const injectRepoSize = async () => {
     }
 
     const humanSize = getHumanFileSize(repoSize * 1024)
-    const sizeElt = createRepoRefreshSizeElements(humanSize)
+    const sizeElt = createSizeElements(humanSize)
     createSizeWrapperElement(statsElt, sizeElt)
   }
 }
