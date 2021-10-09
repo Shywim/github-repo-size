@@ -28,11 +28,11 @@ const handleErr = (err: unknown) => {
 }
 
 const checkIsPrivate = () => {
-  if (document.getElementsByClassName('private').length > 0) {
-    return true
-  }
-
-  return false
+  return (
+    document.querySelector(
+      '#repository-container-header .Label.Label--secondary'
+    )?.innerHTML === 'Private'
+  )
 }
 
 const getRepoInfo = (url: string): RepoInfo | null => {
