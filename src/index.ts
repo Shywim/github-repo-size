@@ -1,6 +1,8 @@
 import domLoaded from 'dom-loaded'
 import {
   AUTO_ASK_KEY,
+  ERROR_UNAUTHORIZED,
+  ERROR_UNKNOWN,
   GITHUB_API,
   GITHUB_API_V3,
   REPO_REFRESH_STATS_QUERY,
@@ -11,6 +13,7 @@ import {
 } from './constants'
 import {
   askForToken,
+  createErrorElement,
   createMissingTokenElement,
   createSizeElements,
   createSizeWrapperElement,
@@ -53,7 +56,6 @@ const getRepoDataAnon = (repoInfo: RepoInfo) => {
     .fetch(request)
     .then<PartialGitHubRepoRestV3>(checkResponse)
     .then((repoData) => repoData.size)
-    .catch(handleErr)
 }
 
 const getRepoData = (repoInfo: RepoInfo, token: string) => {
@@ -73,7 +75,6 @@ const getRepoData = (repoInfo: RepoInfo, token: string) => {
     .fetch(request)
     .then<PartialGitHubRepo>(checkResponse)
     .then(getRepoSize)
-    .catch(handleErr)
 }
 
 const checkResponse = <T>(resp: Response): Promise<T> => {
@@ -81,7 +82,11 @@ const checkResponse = <T>(resp: Response): Promise<T> => {
     return resp.json() as Promise<T>
   }
 
-  throw Error(`Invalid response from github ${resp.status} - ${resp.body}`)
+  if (resp.status === 401) {
+    throw new Error(ERROR_UNAUTHORIZED)
+  }
+
+  throw new Error(ERROR_UNKNOWN)
 }
 
 const getRepoSize = (data: PartialGitHubRepo) => {
@@ -132,10 +137,20 @@ const injectRepoSize = async () => {
     }
 
     let repoSize
-    if (token == null) {
-      repoSize = await getRepoDataAnon(repoInfo)
-    } else {
-      repoSize = await getRepoData(repoInfo, token)
+    try {
+      if (token == null) {
+        repoSize = await getRepoDataAnon(repoInfo)
+      } else {
+        repoSize = await getRepoData(repoInfo, token)
+      }
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        if (err.message === ERROR_UNAUTHORIZED) {
+          createSizeWrapperElement(statsElt, createErrorElement('Unauthorized Token!'))
+        } else {
+          createSizeWrapperElement(statsElt, createErrorElement('Unknown Error!'))
+        }
+      }
     }
 
     if (repoSize == null) {

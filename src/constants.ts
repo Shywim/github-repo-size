@@ -9,3 +9,6 @@ export const UNITS = ['B', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB
 export const AUTO_ASK_KEY = 'grs_auto_ask'
 export const MODAL_ID = 'grs_token_modal'
 export const TOKEN_INPUT_ID = 'grs_token_input'
+
+export const ERROR_UNAUTHORIZED = '401'
+export const ERROR_UNKNOWN = '-1'

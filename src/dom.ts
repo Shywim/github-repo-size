@@ -37,7 +37,11 @@ const closeModal = () => {
 }
 
 export const createMissingTokenElement = () => {
-  const text = document.createTextNode('Missing token!')
+  return createErrorElement('Missing token!')
+}
+
+export const createErrorElement = (message: string) => {
+  const text = document.createTextNode(message)
 
   return text
 }
