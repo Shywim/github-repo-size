@@ -102,7 +102,7 @@ export const createSizeWrapperElement = async (
         <div class="px-3 py-2 text-gray-dark">
           <p class="text-gray">You need to provide a Personal Access Token to access size of private repositories.<br>
           You can create one in your <a style="display: inline; color: #0366d6;" href="https://github.com/settings/tokens">GitHub settings</a>. <strong>(don't forget to check the "repo" permission)</strong><br>
-          <span style="font-size: 10px; font-weight: 600;">(to show this dialog again, click on the size element in any public repository)</span></p>
+          <span style="font-size: 10px; font-weight: 600;">(to show this dialog again, click on the size element in any public or private repository)</span></p>
           <div class="form-group">
             <label for="gh_token">Personal Access Token</label>
             <input id="${TOKEN_INPUT_ID}" class="form-control long" autocomplete="off" type="text" name="gh_token" placeholder="${tokenPlaceholder}">
@@ -110,7 +110,7 @@ export const createSizeWrapperElement = async (
         </div>
         ${tokenInfo}
         <div class="flash flash-full flash-warn">
-          <strong>Beware if you use a public device!</strong> The token will be saved locally, in the browser storage.
+          <strong>Beware if you use a public device!</strong> The token will be saved locally, in the browser's storage.
         </div>
         <div class="d-flex flex-items-center flex-justify-between p-3 border-top">
           <button type="submit" class="btn btn-primary first-in-line">

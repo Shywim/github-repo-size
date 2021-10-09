@@ -116,14 +116,12 @@ const injectRepoSize = async () => {
     statsElt = statsRow
 
     const repoSizeElt = document.getElementById(REPO_SIZE_ID)
-
-    // nothing to do if we already have the size displayed
     if (repoSizeElt != null) {
-      return
+      repoSizeElt.remove()
     }
 
     const token = await getStoredSetting(TOKEN_KEY)
-    if (token == null && checkIsPrivate()) {
+    if ((token == null || token === '') && checkIsPrivate()) {
       const autoAsk = await getStoredSetting(AUTO_ASK_KEY)
       if (autoAsk == null || autoAsk === true) {
         askForToken()
@@ -155,6 +153,7 @@ document.addEventListener('pjax:end', injectRepoSize, false)
 
 // Update displayed size when a new token is saved
 browser.storage.onChanged.addListener((changes) => {
+  console.log(changes)
   if (changes[TOKEN_KEY]) {
     injectRepoSize()
   }
