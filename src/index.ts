@@ -26,10 +26,6 @@ import {
 } from './types'
 import { getStoredSetting } from './userSettings'
 
-const handleErr = (err: unknown) => {
-  console.error(err)
-}
-
 const checkIsPrivate = () => {
   return (
     document.querySelector(

@@ -1,8 +1,6 @@
 # A Firefox addon to display a Github repository's size
 
-[![Build Status](https://cloud.drone.io/api/badges/Shywim/github-repo-size/status.svg)](https://cloud.drone.io/Shywim/github-repo-size)
 [![Mozilla Add-on](https://img.shields.io/amo/v/github-repo-size.svg?style=flat-square)][amo]
-[![UserScript](https://img.shields.io/badge/userscript-v1.6.0-blue.svg?style=flat-square)][ujs]
 
 Add repository size to the Github's summary.
 
@@ -23,15 +21,14 @@ A **Personal Access Token** from an account with access to the private repositor
 required for this addon to work. You can create a Personal Access Token
 [here][ghsettings]. **Don't forget to check the `repo` scope.**
 
-The addon will ask for a token automatically the first time you visit a private
-repository, you can also show the dialog by clicking on the element added by the
-addon or you can visit the addon's settings page (Firefox only).
+You can also show the dialog to save your token by clicking on the element added
+by the addon on any repository, public or private, or you can visit the addon's
+settings page.
 
 ## Building
 
-- Use `yarn build-webext` to build the Firefox webextension
-- Use `yarn build-userscript` to build the UserScript
-- Use `yarn webext` to have an automated build on changes
+- Use `yarn build` to build the Firefox webextension
+- Use `yarn watch` to have an automated build on changes and `yarn webext:run` to test the addon
 
 [amo]: https://addons.mozilla.org/firefox/addon/github-repo-size/
 [ujs]: https://github.com/Shywim/github-repo-size/releases/latest/download/github-repo-size.user.js
