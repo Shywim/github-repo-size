@@ -3,7 +3,10 @@ export const GITHUB_API = 'https://api.github.com/graphql'
 export const GITHUB_API_V3 = 'https://api.github.com/repos/'
 export const REPO_STATS_CLASS = 'numbers-summary'
 export const REPO_REFRESH_STATS_QUERY =
-  '.repository-content .Box-header .Details ul'
+  'div.d-flex.flex-shrink-0.gap-2'
+  //'div.d-flex.flex-shrink-0.gap-2 [aria-labelledby="folders-and-files"]'
+  //'div.d-flex.flex-shrink-0.gap-2 div td tr tbody table[aria-labelledby="folders-and-files"]'
+  //'div.d-flex.flex-shrink-0.gap-2 div.Box-sc-g0xbh4-0.brJRqk table[aria-labelledby="folders-and-files"]'
 export const REPO_SIZE_ID = 'addon-repo-size'
 export const SIZE_KILO = 1024
 export const UNITS = [

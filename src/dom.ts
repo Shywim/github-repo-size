@@ -4,6 +4,7 @@ import {
   REPO_SIZE_ID,
   TOKEN_INPUT_ID,
   TOKEN_KEY,
+  REPO_REFRESH_STATS_QUERY
 } from './constants'
 import { HumanSize } from './types'
 import { getStoredSetting, setSetting } from './userSettings'
@@ -68,6 +69,28 @@ export const createSizeElements = (repoSizeHuman: HumanSize) => {
 
   return sizeContainer
 }
+// Function by Yong Wang https://stackoverflow.com/a/61511955
+// wait until element is added to DOM.
+export const waitForElm = async (selector:string) => {
+  return new Promise(resolve => {
+      if (document.querySelector(selector)) {
+          return resolve(document.querySelector(selector));
+      }
+
+      const observer: MutationObserver = new MutationObserver(mutations => {
+          if (document.querySelector(selector)) {
+              observer.disconnect();
+              resolve(document.querySelector(selector));
+          }
+      });
+
+      // If you get "parameter 1 is not of type 'Node'" error, see https://stackoverflow.com/a/77855838/492336
+      observer.observe(document.body, {
+          childList: true,
+          subtree: true
+      });
+  });
+}
 
 export const createSizeWrapperElement = async (
   parent: Element,
@@ -85,10 +108,12 @@ export const createSizeWrapperElement = async (
     `
   }
   const li = document.createElement('li')
+  //let domContainsLi = waitForElm(`#${MODAL_ID}-size-stat-content`)
   li.id = REPO_SIZE_ID
   li.className = 'ml-0 ml-md-3'
+  li.style.cssText = "align-content: center"
 
-  li.innerHTML = `
+  const liInnerHtml = `
   <details id="${MODAL_ID}-size-stat-wrapper" class="details-reset details-overlay details-overlay-dark">
     <summary>
       <a id="${MODAL_ID}-size-stat-content" class="pl-3 pr-3 py-3 p-md-0 mt-n3 mb-n3 mr-n3 m-md-0 Link--primary no-underline no-wrap" title="As reported by the GitHub API, it mays differ from the actual repository size.">
@@ -125,27 +150,46 @@ export const createSizeWrapperElement = async (
     </details-dialog>
   </details>
   `
-
+  li.innerHTML = liInnerHtml
   parent.appendChild(li)
+  let doneWaiting = false
+  const keepAdding = setInterval(function() {
+      if (doneWaiting && document.querySelector(`#${MODAL_ID}-size-stat-wrapper`)) {
+        clearInterval(keepAdding)
+        return
+      }
+      const newStats = document.createElement('li')
+      newStats.id = REPO_SIZE_ID
+      newStats.className = 'ml-0 ml-md-3'
+      newStats.style.cssText = "align-content: center"
+      newStats.innerHTML = liInnerHtml
+      let statsRow = document.querySelector(REPO_REFRESH_STATS_QUERY)
+      statsRow.appendChild(newStats)
+    }, 1000)
+  //domLoaded.then(function() {
+  //document.addEventListener("DOMLoaded", function() {
+  //  finishAddingStuff(children)});
+  waitForElm(`#${MODAL_ID}-size-stat-wrapper`).then(function() {
+    doneWaiting = true
+    const elt = document.getElementById(`${MODAL_ID}-size-stat-content`)
+    if (elt == null) {
+      return
+    }
+    elt.addEventListener('click', askForToken)
+    elt.appendChild(document.createTextNode(' '))
 
-  const elt = document.getElementById(`${MODAL_ID}-size-stat-content`)
-  if (elt == null) {
-    return
-  }
-  elt.addEventListener('click', askForToken)
-  elt.appendChild(document.createTextNode(' '))
+    const closeModalBtn = document.getElementById(`${MODAL_ID}-modal-close`)
+    if (closeModalBtn == null) {
+      return
+    }
+    closeModalBtn.addEventListener('click', closeModal)
 
-  const closeModalBtn = document.getElementById(`${MODAL_ID}-modal-close`)
-  if (closeModalBtn == null) {
-    return
-  }
-  closeModalBtn.addEventListener('click', closeModal)
+    const form = document.getElementById(`${MODAL_ID}-form`)
+    if (form == null) {
+      return
+    }
+    form.addEventListener('submit', saveToken)
 
-  const form = document.getElementById(`${MODAL_ID}-form`)
-  if (form == null) {
-    return
-  }
-  form.addEventListener('submit', saveToken)
-
-  elt.appendChild(children)
+    elt.appendChild(children)
+  });
 }

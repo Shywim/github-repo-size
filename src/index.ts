@@ -17,6 +17,7 @@ import {
   createMissingTokenElement,
   createSizeElements,
   createSizeWrapperElement,
+  waitForElm
 } from './dom'
 import {
   HumanSize,
@@ -109,10 +110,15 @@ const injectRepoSize = async () => {
 
   if (repoInfo != null) {
     let statsElt
-    const statsRow = document.querySelector(REPO_REFRESH_STATS_QUERY)
+    let statsRow = document.querySelector(REPO_REFRESH_STATS_QUERY)
     if (statsRow == null) {
-      // can't find any element to add our stats element, we stop here
-      return
+      if (document.querySelector("#code-tab.selected")) {
+        waitForElm(REPO_REFRESH_STATS_QUERY)
+        statsRow = document.querySelector(REPO_REFRESH_STATS_QUERY)
+      } else {
+        // can't find any element to add our stats element, we stop here
+        return
+      }
     }
     statsElt = statsRow
 
@@ -166,7 +172,20 @@ const injectRepoSize = async () => {
 }
 
 // Update to each ajax event
-document.addEventListener('pjax:end', injectRepoSize, false)
+document.addEventListener('ready pjax:end', injectRepoSize, false)
+
+// Update on every URL change
+// https://stackoverflow.com/questions/75908148/mozilla-add-on-run-function-when-url-changes-not-just-on-page-load
+let previousUrl:string = '';
+let observer = new MutationObserver(function (mutations) {
+    if (location.href !== previousUrl) {
+        previousUrl = location.href;
+        injectRepoSize()
+    }
+});
+
+const config = {attributes: true, childList: true, subtree: true};
+observer.observe(document, config);
 
 // Update displayed size when a new token is saved
 browser.storage.onChanged.addListener((changes) => {
@@ -176,4 +195,4 @@ browser.storage.onChanged.addListener((changes) => {
   }
 })
 
-domLoaded.then(injectRepoSize)
+//domLoaded.then(injectRepoSize)
